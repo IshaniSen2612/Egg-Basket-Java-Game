@@ -10,19 +10,26 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+
+
 public class Viewport extends JPanel implements ActionListener 
 {
     private Timer timer;
+    private Timer timer2;
     private Player player;
+    private Egg egg;
     private final int DELAY=10; 
     private int x;
     private int y;
     private int w;
+    private int h;
+    private boolean eggSpawned;
 
     public Viewport(int w, int h)
     {
         initBoard();
         this.w=w;
+        this.h=h;
         x = w / 2 - 56;
         y = h - 172;
         player.setX(x);
@@ -39,6 +46,14 @@ public class Viewport extends JPanel implements ActionListener
 
         timer = new Timer(DELAY,this);
         timer.start();
+
+        timer2 = new Timer(2000,new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                repaint();
+            }
+        });
+        timer2.start();
     }
 
     @Override
@@ -46,6 +61,7 @@ public class Viewport extends JPanel implements ActionListener
     {
         super.paintComponent(g);
         draw(g);
+        spawnEggs(g);
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -54,10 +70,27 @@ public class Viewport extends JPanel implements ActionListener
         Graphics2D g2d=(Graphics2D) g;
         
         g2d.drawImage(player.getImage(),player.getX(),player.getY(),this);
-
         // For finding out the origin point of the player sprite
         // g.setColor(Color.WHITE);
         // g.drawOval(player.getX(), player.getY(), 1, 1);
+    }
+
+    private void spawnEggs(Graphics g)
+    {   
+        if(!eggSpawned)
+        {
+            egg=new Egg(h);
+            eggSpawned=true;
+        }
+
+        Graphics2D g2d=(Graphics2D) g;
+
+        if(egg.isVisible())
+        g2d.drawImage(egg.getImage(),egg.getX(),egg.getY(),this);
+        else
+        {
+            eggSpawned=false;
+        }
     }
 
     @Override
