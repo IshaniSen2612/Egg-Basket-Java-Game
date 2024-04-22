@@ -17,11 +17,12 @@ public class Viewport extends JPanel implements ActionListener
     private final int DELAY=10; 
     private int x;
     private int y;
+    private int w;
 
     public Viewport(int w, int h)
     {
         initBoard();
-
+        this.w=w;
         x = w / 2 - 56;
         y = h - 172;
         player.setX(x);
@@ -67,7 +68,7 @@ public class Viewport extends JPanel implements ActionListener
 
     private void step()
     {
-        player.move();
+        player.move(w);
         repaint();
         // repaint(player.getX()-1,player.getY()-1,player.getWidth()+2,player.getHeight()+2);
     }

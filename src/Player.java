@@ -11,6 +11,7 @@ public class Player
     private int w;
     private int h;
     private Image image;
+    private int speed=2;
     
     public Player()
     {
@@ -66,8 +67,19 @@ public class Player
         return image;
     }
 
-    public void move()
+    public void move(int end)
     {
+        if(x==0)
+        {
+            if(dx==speed)
+            x+=dx;
+        }
+        else if((x+128)==end)
+        {
+            if(dx==-speed)
+            x+=dx;
+        }
+        else
         x+=dx;
     }
 
@@ -76,10 +88,10 @@ public class Player
         int key=e.getKeyCode();
 
         if(key==KeyEvent.VK_LEFT)
-            dx=-2;
+            dx=-speed;
 
         if(key==KeyEvent.VK_RIGHT)
-            dx=2;
+            dx=speed;
     }
 
     public void keyReleased(KeyEvent e)
