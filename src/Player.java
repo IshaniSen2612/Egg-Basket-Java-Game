@@ -23,6 +23,7 @@ public class Player
     private void loadImage()
     {
         ImageIcon ii=new ImageIcon("E:\\CODES\\Egg-Basket-Java-Game\\src\\Assets\\Sprites\\player-sprite.png");
+        // ImageIcon ii = new ImageIcon("C:\\Users\\SHAMBA\\Documents\\GitHub\\Egg-Basket-Java-Game\\src\\Assets\\Sprites\\player-sprite.png");
         
         image=ii.getImage().getScaledInstance(128, 128, Image.SCALE_DEFAULT);
        
