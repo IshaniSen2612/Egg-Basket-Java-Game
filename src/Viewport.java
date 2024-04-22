@@ -21,8 +21,9 @@ public class Viewport extends JPanel implements ActionListener
     public Viewport(int w, int h)
     {
         initBoard();
-        x=w/2;
-        y=h-300;
+
+        x = w / 2 - 56;
+        y = h - 172;
         player.setX(x);
         player.setY(y);
     }
@@ -33,9 +34,9 @@ public class Viewport extends JPanel implements ActionListener
         setBackground(Color.black);
         setFocusable(true);
 
-        player=new Player();
+        player = new Player();
 
-        timer=new Timer(DELAY,this);
+        timer = new Timer(DELAY,this);
         timer.start();
     }
 
@@ -52,6 +53,10 @@ public class Viewport extends JPanel implements ActionListener
         Graphics2D g2d=(Graphics2D) g;
         
         g2d.drawImage(player.getImage(),player.getX(),player.getY(),this);
+
+        // For finding out the origin point of the player sprite
+        // g.setColor(Color.WHITE);
+        // g.drawOval(player.getX(), player.getY(), 1, 1);
     }
 
     @Override
@@ -63,7 +68,8 @@ public class Viewport extends JPanel implements ActionListener
     private void step()
     {
         player.move();
-        repaint(player.getX()-1,player.getY()-1,player.getWidth()+2,player.getHeight()+2);
+        repaint();
+        // repaint(player.getX()-1,player.getY()-1,player.getWidth()+2,player.getHeight()+2);
     }
 
     private class TAdapter extends KeyAdapter{
