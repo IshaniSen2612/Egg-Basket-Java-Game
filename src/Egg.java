@@ -1,5 +1,6 @@
 
 import java.awt.Image;
+import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 
@@ -13,22 +14,24 @@ public class Egg implements Runnable
     private int x,y;
     private boolean visible;
     private int h;
+    public Rectangle solidarea;
+    public Player p;
     
-    public Egg(int h)
+    
+    public Egg(int h, Player player)
     {
         initEgg();
         visible=true;
         this.h=h;
         addNotify();
-        System.out.println("here");
+        this.p=player;
     }
 
     private void initEgg()
     {
         loadImage();
 
-        x=(int)Math.random()* 1280;
-        System.out.println(x);
+        x=(int)((Math.random()* 1280)-egg.getWidth(null));
         y=INITIAL_Y;
     }
 
@@ -37,7 +40,7 @@ public class Egg implements Runnable
         ImageIcon ii=new ImageIcon("E:\\CODES\\Egg-Basket-Java-Game\\src\\Assets\\Sprites\\eggSprite.png");
         egg=ii.getImage();
 
-        
+        solidarea=new Rectangle(x,y,egg.getWidth(null),egg.getHeight(null));
     }
 
     public int getX()
@@ -57,18 +60,19 @@ public class Egg implements Runnable
 
     private void move()
     {
-        //x+=1;
-        y+=2;
-        if(y==h-egg.getHeight(null)+50)
+        y+=1;
+        if(y==h-egg.getHeight(null))
         {
            
             ImageIcon ii=new ImageIcon("E:\\CODES\\Egg-Basket-Java-Game\\src\\Assets\\Sprites\\OmleteSprite.png");
             egg=ii.getImage();
+            p.health--;
         }
         if(y==h)
         {
             visible=false;
         }
+        solidarea.setLocation(x,y);
     }
 
     public boolean isVisible()
@@ -76,7 +80,11 @@ public class Egg implements Runnable
         return(visible);
     }
     
-
+    public void setVisible(boolean b)
+    {
+        visible=b;
+    }
+    
     public void addNotify() {
         animator=new Thread(this);
         animator.start();
@@ -90,6 +98,10 @@ public class Egg implements Runnable
 
         while(true)
         {
+            if(!this.isVisible())
+            {
+                animator.interrupt();
+            }
             move();
             timeDiff=System.currentTimeMillis()-beforeTime;
             sleep=DELAY-timeDiff;
@@ -102,8 +114,7 @@ public class Egg implements Runnable
                 Thread.sleep(sleep);   
             }catch(InterruptedException e){
                 String msg=String.format("Thread interrupted: %s",e.getMessage());
-
-                // JOptionPane.showMessageDialog(this, msg, "Error",JOptionPane.ERROR_MESSAGE);
+                System.out.println(msg);
             }
             beforeTime=System.currentTimeMillis();
         }

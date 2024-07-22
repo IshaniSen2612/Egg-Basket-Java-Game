@@ -1,11 +1,16 @@
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -17,13 +22,13 @@ public class Viewport extends JPanel implements ActionListener
     private Timer timer;
     private Timer timer2;
     private Player player;
-    private Egg egg;
     private final int DELAY=10; 
     private int x;
     private int y;
     private int w;
     private int h;
-    private boolean eggSpawned;
+    private int points=0;
+    private List<Egg> eggs=new ArrayList<>();
 
     public Viewport(int w, int h)
     {
@@ -39,7 +44,7 @@ public class Viewport extends JPanel implements ActionListener
     private void initBoard()
     {
         addKeyListener(new TAdapter());
-        setBackground(Color.black);
+        setBackground(Color.white);
         setFocusable(true);
 
         player = new Player();
@@ -50,7 +55,14 @@ public class Viewport extends JPanel implements ActionListener
         timer2 = new Timer(2000,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                repaint();
+                if(eggs.size()<6)
+                {
+                    eggs.add(new Egg(h,player));
+                }
+                else
+                {
+                    eggs.remove(0);
+                }
             }
         });
         timer2.start();
@@ -68,28 +80,16 @@ public class Viewport extends JPanel implements ActionListener
     private void draw(Graphics g)
     {
         Graphics2D g2d=(Graphics2D) g;
-        
         g2d.drawImage(player.getImage(),player.getX(),player.getY(),this);
-        // For finding out the origin point of the player sprite
-        // g.setColor(Color.WHITE);
-        // g.drawOval(player.getX(), player.getY(), 1, 1);
     }
-
+    
     private void spawnEggs(Graphics g)
     {   
-        if(!eggSpawned)
-        {
-            egg=new Egg(h);
-            eggSpawned=true;
-        }
-
         Graphics2D g2d=(Graphics2D) g;
-
-        if(egg.isVisible())
-        g2d.drawImage(egg.getImage(),egg.getX(),egg.getY(),this);
-        else
+        for(Egg e:eggs)
         {
-            eggSpawned=false;
+            if(e.isVisible())
+                g2d.drawImage(e.getImage(),e.getX(),e.getY(),this);
         }
     }
 
@@ -102,8 +102,48 @@ public class Viewport extends JPanel implements ActionListener
     private void step()
     {
         player.move(w);
+        if(player.health<=0)
+        {
+            drawGameOver(getGraphics());
+            timer.stop();
+            timer2.stop();
+        }
+        checkCollisions();
         repaint();
-        // repaint(player.getX()-1,player.getY()-1,player.getWidth()+2,player.getHeight()+2);
+    
+    }
+
+    public void checkCollisions() 
+    {
+
+        Rectangle  r1 = player.solidarea.getBounds();
+
+        for(Egg e: eggs) {
+            if(e.getY()>500)
+            {
+                Rectangle r2 = e.solidarea.getBounds();
+
+                if (r2.intersects(r1)) 
+                {
+                    System.out.println("Collided");
+                    points++;
+                    System.out.println(points);
+                    e.setVisible(false);
+                }
+            }
+        }
+    }
+
+    private void drawGameOver(Graphics g) {
+
+        String msg = "Game Over";
+        Font small = new Font("Helvetica", Font.BOLD, 14);
+        FontMetrics fm = getFontMetrics(small);
+
+        g.setColor(Color.white);
+        g.setFont(small);
+        g.drawString(msg, (w- fm.stringWidth(msg)) / 2,
+                h / 2);
     }
 
     private class TAdapter extends KeyAdapter{

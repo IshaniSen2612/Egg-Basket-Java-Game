@@ -1,4 +1,5 @@
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
@@ -7,11 +8,25 @@ public class Player
 {
     private int x;
     private int y;
+    /**
+     * shift horizontally
+     */
     private int dx;
-    private int w;
+    /**
+     * width of the player sprite image
+     */
+    private int w; 
+    /**
+     * height of the player sprite image
+     */
     private int h;
     private Image image;
+    /**
+     * rate of movement
+     */
     private int speed=2;
+    public Rectangle solidarea;
+    public int health=3;
     
     public Player()
     {
@@ -24,12 +39,13 @@ public class Player
     private void loadImage()
     {
         ImageIcon ii=new ImageIcon("E:\\CODES\\Egg-Basket-Java-Game\\src\\Assets\\Sprites\\player-sprite.png");
-        // ImageIcon ii = new ImageIcon("C:\\Users\\SHAMBA\\Documents\\GitHub\\Egg-Basket-Java-Game\\src\\Assets\\Sprites\\player-sprite.png");
         
         image=ii.getImage().getScaledInstance(128, 128, Image.SCALE_DEFAULT);
        
         w=image.getWidth(null);
         h=image.getHeight(null);
+
+        solidarea=new Rectangle(x+33,y+80,64,15);
     }
     
     public void setX(int x)
@@ -81,6 +97,8 @@ public class Player
         }
         else
         x+=dx;
+
+        solidarea.setLocation(x+33,y+80);
     }
 
     public void keyPressed(KeyEvent e)
