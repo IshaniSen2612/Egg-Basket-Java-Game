@@ -30,8 +30,10 @@ public class Egg implements Runnable
     private void initEgg()
     {
         loadImage();
-
         x=(int)((Math.random()* 1280)-egg.getWidth(null));
+        if(x<0){
+            x=0;
+        }
         y=INITIAL_Y;
     }
 
@@ -61,12 +63,14 @@ public class Egg implements Runnable
     private void move()
     {
         y+=1;
-        if(y==h-egg.getHeight(null))
+        if(y==h-egg.getHeight(null)) //height of viewport-height of egg sprite
         {
            
             ImageIcon ii=new ImageIcon("E:\\CODES\\Egg-Basket-Java-Game\\src\\Assets\\Sprites\\OmleteSprite.png");
             egg=ii.getImage();
+
             p.health--;
+            System.out.println("Health decreased: "+p.health);
         }
         if(y==h)
         {
@@ -100,7 +104,7 @@ public class Egg implements Runnable
         {
             if(!this.isVisible())
             {
-                animator.interrupt();
+                break;
             }
             move();
             timeDiff=System.currentTimeMillis()-beforeTime;

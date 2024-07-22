@@ -23,11 +23,35 @@ public class Viewport extends JPanel implements ActionListener
     private Timer timer2;
     private Player player;
     private final int DELAY=10; 
+
+    /**
+     * Stores x-coordinate of player sprite
+     */
     private int x;
+
+    /**
+     * Stores y coordinate of player sprite
+     */
     private int y;
+
+    /**
+     * width of Viewport
+     */
     private int w;
+
+    /**
+     * height of Viewport
+     */
     private int h;
+
+    /**
+     * stores the points collected
+     */
     private int points=0;
+
+    /**
+     * ArrayList of egg sprites spawned
+     */
     private List<Egg> eggs=new ArrayList<>();
 
     public Viewport(int w, int h)
@@ -61,12 +85,12 @@ public class Viewport extends JPanel implements ActionListener
                 }
                 else
                 {
-                    eggs.remove(0);
+                  eggs.remove(0);
                 }
             }
         });
         timer2.start();
-    }
+    }   
 
     @Override
     protected void paintComponent(Graphics g) 
@@ -104,13 +128,13 @@ public class Viewport extends JPanel implements ActionListener
         player.move(w);
         if(player.health<=0)
         {
+            System.out.println("Game over");
             drawGameOver(getGraphics());
             timer.stop();
             timer2.stop();
         }
         checkCollisions();
-        repaint();
-    
+        repaint();     
     }
 
     public void checkCollisions() 
@@ -119,7 +143,7 @@ public class Viewport extends JPanel implements ActionListener
         Rectangle  r1 = player.solidarea.getBounds();
 
         for(Egg e: eggs) {
-            if(e.getY()>500)
+            if(e.getY()>500 && e.isVisible())
             {
                 Rectangle r2 = e.solidarea.getBounds();
 
@@ -140,7 +164,7 @@ public class Viewport extends JPanel implements ActionListener
         Font small = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics fm = getFontMetrics(small);
 
-        g.setColor(Color.white);
+        g.setColor(Color.black);
         g.setFont(small);
         g.drawString(msg, (w- fm.stringWidth(msg)) / 2,
                 h / 2);
