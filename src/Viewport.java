@@ -23,6 +23,7 @@ public class Viewport extends JPanel implements ActionListener
     private Timer timer2;
     private Player player;
     private final int DELAY=10; 
+    private boolean gameOver=false;
 
     /**
      * Stores x-coordinate of player sprite
@@ -96,8 +97,14 @@ public class Viewport extends JPanel implements ActionListener
     protected void paintComponent(Graphics g) 
     {
         super.paintComponent(g);
-        draw(g);
-        spawnEggs(g);
+        if(gameOver){
+            drawGameOver(g);
+        }
+        else
+        {
+            draw(g);
+            spawnEggs(g);
+        }
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -128,8 +135,9 @@ public class Viewport extends JPanel implements ActionListener
         player.move(w);
         if(player.health<=0)
         {
+            gameOver=true;
             System.out.println("Game over");
-            drawGameOver(getGraphics());
+            // drawGameOver(getGraphics());
             timer.stop();
             timer2.stop();
         }
@@ -159,7 +167,7 @@ public class Viewport extends JPanel implements ActionListener
     }
 
     private void drawGameOver(Graphics g) {
-
+        
         String msg = "Game Over";
         Font small = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics fm = getFontMetrics(small);
@@ -168,6 +176,9 @@ public class Viewport extends JPanel implements ActionListener
         g.setFont(small);
         g.drawString(msg, (w- fm.stringWidth(msg)) / 2,
                 h / 2);
+        String p="Score: "+Integer.toString(points);
+        g.drawString(p,(w- fm.stringWidth(p)) / 2,
+        (h / 2)+50);
     }
 
     private class TAdapter extends KeyAdapter{

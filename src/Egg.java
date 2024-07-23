@@ -63,7 +63,8 @@ public class Egg implements Runnable
     private void move()
     {
         y+=1;
-        if(y==h-egg.getHeight(null)) //height of viewport-height of egg sprite
+        // if(y==h-egg.getHeight(null)) //height of viewport-height of egg sprite
+        if(y==h)
         {
            
             ImageIcon ii=new ImageIcon("E:\\CODES\\Egg-Basket-Java-Game\\src\\Assets\\Sprites\\OmleteSprite.png");
