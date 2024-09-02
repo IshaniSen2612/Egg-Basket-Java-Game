@@ -32,7 +32,7 @@ javac -d ./bin/ ./src/*.java
 Move to the bin folder and run the application
 ```
 cd bin
-java App.java
+java App
 ```
 The game should now open in a new window.
 
